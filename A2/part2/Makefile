@@ -1,4 +1,7 @@
+CC = gcc
+CFLAGS = -Wall
+
 all: readfile.c
-	gcc -o readfile readfile.c
+	$(CC) $(CFLAGS) -o readfile readfile.c
 clean:
 	rm -f readfile

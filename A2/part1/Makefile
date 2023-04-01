@@ -1,4 +1,7 @@
+CC = gcc
+CFLAGS = -Wall
+
 all: triang.c
-	gcc -o triang triang.c
+	$(CC) $(CFLAGS) -o triang triang.c
 clean:
 	rm -f triang
