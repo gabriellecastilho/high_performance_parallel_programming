@@ -2,54 +2,54 @@
 #include <stdlib.h>
 
 typedef struct	node {
-	int		index;
-	float	max;
-	float	min;
-	struct	node	*next;
+	int			day;
+	float		max;
+	float		min;
+	struct node	*next;
 }	node_t;
 
-void add_node(node_t **node, int index, float min, float max)
+void add_node(node_t **node, int day, float min, float max)
 {
 	if (*node == NULL) // add first node or at the end of table
 	{
 		*node = (node_t *)malloc(sizeof(node_t));
-		(**node).index = index;
+		(**node).day = day;
 		(**node).min = min;
 		(**node).max = max;
 		(**node).next = NULL;
 	}
 
-	else if ((**node).index == index) // update node
+	else if ((**node).day == day) // update node
 	{
 		(**node).min = min;
 		(**node).max = max;
 	}
 
-	else if ((**node).next == NULL && (**node).index < index) //add node at the beginning of table or after root
-		add_node(&(**node).next, index, min, max);
+	else if ((**node).next == NULL && (**node).day < day) //add node at the beginning of table or after root
+		add_node(&(**node).next, day, min, max);
 
-	else if ((**node).index > index) //add node before root
+	else if ((**node).day > day) //add node before root
 	{
 		node_t *old_root = (node_t *)malloc(sizeof(node_t));
-		(*old_root).index = (**node).index;
+		(*old_root).day = (**node).day;
 		(*old_root).min = (**node).min;
 		(*old_root).max = (**node).max;
 		(*old_root).next = (**node).next;
-		(**node).index = index;
+		(**node).day = day;
 		(**node).min = min;
 		(**node).max = max;
 		(**node).next = old_root;
 	}
 
-	else if (((**node).next == NULL) || ((**node).next->index < index)) //move forward in the table
+	else if (((**node).next == NULL) || ((**node).next->day <= day)) //move forward in the table
 	{
-		add_node(&(**node).next, index, min, max);
+		add_node(&(**node).next, day, min, max);
 	}
 
 	else //Add node in between two nodes
 	{
 		node_t *new_node = (node_t *)malloc(sizeof(node_t));
-		(*new_node).index = index;
+		(*new_node).day = day;
 		(*new_node).min = min;
 		(*new_node).max = max;
 		(*new_node).next = (**node).next;
@@ -61,18 +61,24 @@ void print_table(node_t *node)
 {
 	if (node != NULL)
 	{
-		printf("%d	%f	%f \n", node->index, node->min, node->max);
+		printf("%d	%f	%f \n", node->day, node->min, node->max);
 		print_table(node->next);
 	}
 }
 
-void delete_node(node_t **node, int index)
+void delete_node(node_t **node, int day)
 {
-	if ((**node).index == index)
+	if (*node == NULL)
+		return;
+	if ((**node).day == day)
 	{
 		node_t *old_node = *node;
 		*node = (**node).next;
 		free(old_node);
+	}
+	else
+	{
+		delete_node(&(**node).next, day);
 	}
 }
 
@@ -91,7 +97,7 @@ void run_program()
 	while (1)
 	{
 		char	command;
-		int		index;
+		int		day;
 		float	min;
 		float	max;
 
@@ -99,10 +105,10 @@ void run_program()
 		scanf(" %c", &command);
 		if (command == 'A' || command == 'a')
 		{
-			scanf(" %d", &index);
+			scanf(" %d", &day);
 			scanf(" %f", &min);
 			scanf(" %f", &max);
-			add_node(&root, index, min, max);
+			add_node(&root, day, min, max);
 		}
 		else if (command == 'P' || command == 'p')
 		{
@@ -112,12 +118,13 @@ void run_program()
 		}
 		else if (command == 'D' || command == 'd')
 		{
-			scanf(" %d", &index);
-			delete_node(&root, index);
+			scanf(" %d", &day);
+			delete_node(&root, day);
 		}
 		else if (command == 'Q' || command == 'q')
 		{
 			delete_all(root);
+			printf("Goodbye\n");
 			break;
 		}
 		else

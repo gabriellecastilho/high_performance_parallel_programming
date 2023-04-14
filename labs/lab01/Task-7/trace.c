@@ -10,11 +10,11 @@ double* trace (double** , int);
 // The main program.
 int main()
 {
-  int i, j, n;
+  int i, n;
   double **matrix;
   double* sum ;
   printf("\nEnter the Dimension for a square matrix:");
-  scanf("%d",n);
+  scanf("%d", &n);
   matrix = initialization(n);
   for(i = 1 ; i < n ; i++)
   fill_vectors(matrix[i] , n);
@@ -40,7 +40,7 @@ double** initialization(int n)
 
 // The fill_vector routine is supposed to fill a given vector with
 // random numbers ranging from -10 to 10.
-void fill_vector(double* vec , int n)
+void fill_vectors(double* vec , int n)
 {
   int i ;
   for(i = 0 ; i < n ; i++)
@@ -56,7 +56,7 @@ void print_matrix(double** matrix , int n)
   for (i= 0 ; i< n ; i++)
     {
     for(j = 0 ; j < n ; j++)
-      printf("%2.3d " , matrix[i][j]);
+      printf("%2.3f " , matrix[i][j]);
     putchar('\n');
     }
 }
