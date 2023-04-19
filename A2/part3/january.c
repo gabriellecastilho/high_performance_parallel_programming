@@ -3,57 +3,40 @@
 
 typedef struct	node {
 	int			day;
-	float		max;
 	float		min;
+	float		max;
 	struct node	*next;
 }	node_t;
 
 void add_node(node_t **node, int day, float min, float max)
 {
-	if (*node == NULL) // add first node or at the end of table
+	node_t *new_node;
+
+	if (*node == NULL)
 	{
 		*node = (node_t *)malloc(sizeof(node_t));
-		(**node).day = day;
-		(**node).min = min;
-		(**node).max = max;
-		(**node).next = NULL;
+		(*node)->day = day;
+		(*node)->min = min;
+		(*node)->max = max;
+		(*node)->next = NULL;
 	}
-
-	else if ((**node).day == day) // update node
+	else if (day == (*node)->day)
 	{
-		(**node).min = min;
-		(**node).max = max;
+		(*node)->min = min;
+		(*node)->max = max;
 	}
-
-	else if ((**node).next == NULL && (**node).day < day) //add node at the beginning of table or after root
-		add_node(&(**node).next, day, min, max);
-
-	else if ((**node).day > day) //add node before root
+	else if (day < (*node)->day)
 	{
-		node_t *old_root = (node_t *)malloc(sizeof(node_t));
-		(*old_root).day = (**node).day;
-		(*old_root).min = (**node).min;
-		(*old_root).max = (**node).max;
-		(*old_root).next = (**node).next;
-		(**node).day = day;
-		(**node).min = min;
-		(**node).max = max;
-		(**node).next = old_root;
+		new_node = (node_t *)malloc(sizeof(node_t));
+		new_node->next = *node;
+		*node = new_node;
+		new_node->day = day;
+		new_node->min = min;
+		new_node->max = max;
 	}
-
-	else if (((**node).next == NULL) || ((**node).next->day <= day)) //move forward in the table
+	else if (day > (*node)->day)
 	{
-		add_node(&(**node).next, day, min, max);
-	}
-
-	else //Add node in between two nodes
-	{
-		node_t *new_node = (node_t *)malloc(sizeof(node_t));
-		(*new_node).day = day;
-		(*new_node).min = min;
-		(*new_node).max = max;
-		(*new_node).next = (**node).next;
-		(**node).next = new_node;
+		add_node(&(*node)->next, day, min, max);
 	}
 }
 
@@ -68,67 +51,67 @@ void print_table(node_t *node)
 
 void delete_node(node_t **node, int day)
 {
+	node_t *temp;
+
 	if (*node == NULL)
 		return;
-	if ((**node).day == day)
+	else if ((*node)->day == day)
 	{
-		node_t *old_node = *node;
-		*node = (**node).next;
-		free(old_node);
+		temp = *node;
+		*node = (*node)->next;
+		free(temp);
 	}
 	else
-	{
-		delete_node(&(**node).next, day);
-	}
+		delete_node(&(*node)->next, day);
 }
 
 void delete_all(node_t *node)
 {
     if (node == NULL)
 		return;
- 
     delete_all(node->next);
     free(node);
 }
 
 void run_program()
 {
-	node_t *root = NULL;
-	while (1)
-	{
-		char	command;
-		int		day;
-		float	min;
-		float	max;
+	node_t	*head;
+	char	command;
+	int		day;
+	float	min;
+	float	max;
 
-		printf("Enter command: ");
-		scanf(" %c", &command);
+	head = NULL;
+	printf("Enter command: ");
+	scanf(" %c", &command);
+	while (command)
+	{
 		if (command == 'A' || command == 'a')
 		{
-			scanf(" %d", &day);
-			scanf(" %f", &min);
-			scanf(" %f", &max);
-			add_node(&root, day, min, max);
+			scanf(" %d  %f  %f", &day, &min, &max);
+			add_node(&head, day, min, max);
 		}
 		else if (command == 'P' || command == 'p')
 		{
 			printf("day	min		max\n");
-			if (root != NULL)		
-				print_table(root);
+			if (head != NULL)		
+				print_table(head);
 		}
 		else if (command == 'D' || command == 'd')
 		{
 			scanf(" %d", &day);
-			delete_node(&root, day);
+			delete_node(&head, day);
 		}
 		else if (command == 'Q' || command == 'q')
 		{
-			delete_all(root);
+			delete_all(head);
 			printf("Goodbye\n");
 			break;
 		}
 		else
 			printf("Command not found\n");
+		printf("Enter command: ");
+		scanf(" %c", &command);
 	}
 }
 
