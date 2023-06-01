@@ -1,36 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void LU_fact(int **A, int **L, int **U, int n)
+void LU_factorization(int **A, int **L, int **U, int n)
 {
-    int sum;
     int i, j, k;
-    for (i = 0; i < n; i++)
-    {
-        for (j = i; j < n; j++)
-        {
-            sum = 0;
-            for (k = 0; k < i; k++)
-                sum += (L[i][k] * U[k][j]);
-            U[i][j] = A[i][j] - sum;
-        }
-        
-        for (j = i; j < n; j++)
-        {
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
             if (i == j)
-                L[i][i] = 1;
+                L[i][j] = 1.0;
             else
-            {
-                sum = 0;
-                for (k = 0; k < i; k++)
-                    sum += (L[j][k] * U[k][i]);
-                L[j][i] = (A[j][i] - sum) / U[i][i];
+                L[i][j] = 0.0;
+            U[i][j] = A[i][j];
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            L[j][i] = U[j][i] / U[i][i];
+            for (k = i; k < n; k++) {
+                U[j][k] -= L[j][i] * U[i][k];
             }
         }
     }
 }
 
-void LU_print(int **A, int **L, int **U, int n)
+void print_matrices(int **A, int **L, int **U, int n)
 {
     int i, j;
 
@@ -80,13 +75,11 @@ int main(void)
     }
     
     for (i = 0; i < n; i++)
-    {
         for (j = 0; j < n; j++)
             scanf("%d", &A[i][j]);
-    }
 
-    LU_fact(A, L, U, n);
-    LU_print(A, L, U, n);
+    LU_factorization(A, L, U, n);
+    print_matrices(A, L, U, n);
 
     for (i = 0; i < n; i++)
     {
@@ -94,6 +87,7 @@ int main(void)
         free(L[i]);
         free(U[i]);
     }
+
     free(A);
     free(L);
     free(U);
