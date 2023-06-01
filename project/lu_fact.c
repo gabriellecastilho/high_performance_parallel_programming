@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void LU_factorization(int **A, int **L, int **U, int n)
+void LU_factorization(double **A, double **L, double **U, int n)
 {
     int i, j, k;
 
@@ -25,7 +25,7 @@ void LU_factorization(int **A, int **L, int **U, int n)
     }
 }
 
-void print_matrices(int **A, int **L, int **U, int n)
+void print_matrices(double **A, double **L, double **U, int n)
 {
     int i, j;
 
@@ -33,7 +33,7 @@ void print_matrices(int **A, int **L, int **U, int n)
     for (i = 0; i < n; i++)
     {
         for (j = 0; j < n; j++)
-            printf("%6d\t", A[i][j]);
+            printf("%6f\t", A[i][j]);
         printf("\n");
     }
 
@@ -41,7 +41,7 @@ void print_matrices(int **A, int **L, int **U, int n)
     for (i = 0; i < n; i++)
     {
         for (j = 0; j < n; j++)
-            printf("%6d\t", L[i][j]);
+            printf("%6f\t", L[i][j]);
         printf("\n");
     }
 
@@ -49,7 +49,7 @@ void print_matrices(int **A, int **L, int **U, int n)
     for (i = 0; i < n; i++)
     {
         for (j = 0; j < n; j++)
-            printf("%6d\t", U[i][j]);
+            printf("%6f\t", U[i][j]);
         printf("\n");
     }
 }
@@ -63,23 +63,23 @@ int main(void)
     scanf("%d", &n);
     printf("Please, add matrix values: ");
 
-    int **A = malloc(n * sizeof(int*));
-    int **L = malloc(n * sizeof(int*));
-    int **U = malloc(n * sizeof(int*));
+    double **A = malloc(n * sizeof(double*));
+    double **L = malloc(n * sizeof(double*));
+    double **U = malloc(n * sizeof(double*));
 
     for (i = 0; i < n; i++)
     {
-        A[i] = malloc(n * sizeof(int));
-        L[i] = malloc(n * sizeof(int*));
-        U[i] = malloc(n * sizeof(int*));
+        A[i] = malloc(n * sizeof(double));
+        L[i] = malloc(n * sizeof(double*));
+        U[i] = malloc(n * sizeof(double*));
     }
     
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
-            scanf("%d", &A[i][j]);
+            scanf("%le", &A[i][j]);
 
     LU_factorization(A, L, U, n);
-    print_matrices(A, L, U, n);
+    //print_matrices(A, L, U, n);
 
     for (i = 0; i < n; i++)
     {
