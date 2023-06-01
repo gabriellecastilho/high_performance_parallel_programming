@@ -18,9 +18,8 @@ void LU_factorization(double **A, double **L, double **U, int n)
     for (i = 0; i < n; i++) {
         for (j = i + 1; j < n; j++) {
             L[j][i] = U[j][i] / U[i][i];
-            for (k = i; k < n; k++) {
+            for (k = i; k < n; k++)
                 U[j][k] -= L[j][i] * U[i][k];
-            }
         }
     }
 }

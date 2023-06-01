@@ -1,5 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
+
+double get_wall_seconds()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    double seconds = tv.tv_sec + (double)tv.tv_usec/1000000;
+    return (seconds);
+}
 
 void LU_factorization(double **A, double **L, double **U, int n)
 {
@@ -56,9 +65,10 @@ void print_matrices(double **A, double **L, double **U, int n)
 
 int main(void)
 {
-    int n = 1000;
+    int n = 2000;
     int i, j;
     FILE *file;
+    double start = get_wall_seconds();
 
     double **A = malloc(n * sizeof(double*));
     double **L = malloc(n * sizeof(double*));
@@ -74,7 +84,7 @@ int main(void)
     file = fopen("matrix_values", "r");
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
-            fread(&A[i][j], sizeof(double), 1, file);
+            fscanf (file, "%le", &A[i][j]);
 
     LU_factorization(A, L, U, n);
     //print_matrices(A, L, U, n);
@@ -89,5 +99,8 @@ int main(void)
     free(A);
     free(L);
     free(U);
+    
+    double end = get_wall_seconds();
+    printf("Execution time: %.3f seconds\n", end - start);
     return (0);
 }
