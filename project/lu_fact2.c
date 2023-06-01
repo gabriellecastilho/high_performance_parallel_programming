@@ -3,28 +3,25 @@
 
 void LU_fact(int **A, int **L, int **U, int n)
 {
-    int sum;
     int i, j, k;
-    for (i = 0; i < n; i++)
-    {
-        for (j = i; j < n; j++)
-        {
-            sum = 0;
-            for (k = 0; k < i; k++)
-                sum += (L[i][k] * U[k][j]);
-            U[i][j] = A[i][j] - sum;
-        }
-        
-        for (j = i; j < n; j++)
-        {
+    double factor;
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            U[i][j] = A[i][j];
             if (i == j)
-                L[i][i] = 1;
+                L[i][j] = 1.0;
             else
-            {
-                sum = 0;
-                for (k = 0; k < i; k++)
-                    sum += (L[j][k] * U[k][i]);
-                L[j][i] = (A[j][i] - sum) / U[i][i];
+                L[i][j] = 0.0;
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            factor = U[j][i] / U[i][i];
+            L[j][i] = factor;
+            for (k = i; k < n; k++) {
+                U[j][k] -= factor * U[i][k];
             }
         }
     }
